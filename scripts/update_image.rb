@@ -29,6 +29,7 @@ class Docker
   end
 
   def update_version_on_branch!(branch, version)
+    raise "Version is empty" if version.strip.empty?
     with_branch(branch) do 
       content = IO.readlines("Dockerfile")
       File.open("Dockerfile", "w") do |f|
@@ -118,7 +119,7 @@ def determine_required_updates
   to_update = {}
   current_versions_in_docker.each do |k,v|
     stash_latest = k.eql?("master") ? stash.most_recent_version : stash.most_recent_version_matching(k.gsub(/release\//,''))
-    unless stash_latest.eql?(v)
+    unless stash_latest.eql?(v) || stash_latest.strip.empty?
       to_update[k] = stash_latest
     end
   end

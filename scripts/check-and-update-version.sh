@@ -7,12 +7,12 @@ ret=$?
 
 # 1 exit code means versions have changed
 if [ "$ret" == "1" ]; then
-    
+
     # Build docker image, use a test tag to not accidentially use the canonical version
-    sudo docker build -t="atlassian/stash-test" . 
+    sudo docker build -t="atlassian/stash-test" .
     # Sanity check, list images
     docker images
-    
+
     # Test the running container
     git show scripts:scripts/test-stash-status.sh > test-stash-status.sh
     chmod u+x ./test-stash-status.sh
@@ -28,7 +28,7 @@ if [ "$ret" == "1" ]; then
     curl -v "http://localhost:7990/status"
 
     # Push changes
-    git push git@bitbucket.org:atlassian/docker-atlassian-stash.git HEAD:develop-test
+    git push --all -n git@bitbucket.org:atlassian/docker-atlassian-stash.git
 else
     echo "No changes. Nothing to do"
 fi

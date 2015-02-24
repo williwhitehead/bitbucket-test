@@ -28,7 +28,7 @@ if [ "$ret" == "1" ]; then
     curl -v "http://localhost:7990/status"
 
     # Push changes
-    git push --all -n git@bitbucket.org:atlassian/docker-atlassian-stash.git
+    git push --all git@bitbucket.org:atlassian/docker-atlassian-stash.git
 else
     echo "No changes. Nothing to do"
 fi

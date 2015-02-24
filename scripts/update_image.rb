@@ -28,6 +28,17 @@ class Docker
     end
   end
 
+
+  def ensure_version_branch_for_latest_exists!(version)
+    with_repo(@repo) do
+      if version =~ /(\d)+\.(\d)+.(\d)+/
+        major, minor = $1, $2
+        branch = "release/#{major}.#{minor}"
+        create_branch!(branch) unless branch_exists?(branch)
+      end
+    end
+  end
+
   def update_version_on_branch!(branch, version)
     raise "Version is empty" if version.nil? || version.strip.empty?
     with_branch(branch) do 
@@ -59,6 +70,10 @@ class Docker
 
   def branch_exists?(name)
     !`git branch --no-color`.split("\n").select {|branch| branch =~ /#{name}/}.empty?
+  end
+
+  def create_branch!(name)
+    `git branch #{name} master`
   end
 
   def resolve_current_branch
@@ -100,6 +115,8 @@ class Stash
   def most_recent_version_matching(prefix)
     @versions.select{|version| version =~ /^#{prefix}/}.last
   end
+
+
   private
 
   def resolve_stash_versions
@@ -126,6 +143,11 @@ def determine_required_updates
   to_update
 end
 
+def check_release_branches_exist!
+  stash = Stash.new(STASH_REPO)
+  $docker.ensure_version_branch_for_latest_exists!(stash.most_recent_version)
+end
+
 versions_to_update = determine_required_updates
 puts "Version update required: #{versions_to_update}" if $DEBUG
 
@@ -137,5 +159,7 @@ else
     puts "Updating #{branch} to #{version}"
     $docker.update_version_on_branch!(branch, version)
   end
+
+  check_release_branches_exist!
   exit 1
 end

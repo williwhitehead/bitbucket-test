@@ -148,6 +148,8 @@ def check_release_branches_exist!
   $docker.ensure_version_branch_for_latest_exists!(stash.most_recent_version)
 end
 
+check_release_branches_exist!
+
 versions_to_update = determine_required_updates
 puts "Version update required: #{versions_to_update}" if $DEBUG
 
@@ -155,12 +157,9 @@ if versions_to_update.empty?
   puts "Nothing to do, all versions up to date" 
   exit 0
 else
-  check_release_branches_exist!
-
   versions_to_update.each do |branch, version|
     puts "Updating #{branch} to #{version}"
     $docker.update_version_on_branch!(branch, version)
   end
-
   exit 1
 end

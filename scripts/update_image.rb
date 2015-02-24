@@ -131,9 +131,11 @@ puts "Version update required: #{versions_to_update}" if $DEBUG
 
 if versions_to_update.empty?
   puts "Nothing to do, all versions up to date" 
+  exit 0
 else
   versions_to_update.each do |branch, version|
     puts "Updating #{branch} to #{version}"
     $docker.update_version_on_branch!(branch, version)
   end
+  exit 1
 end

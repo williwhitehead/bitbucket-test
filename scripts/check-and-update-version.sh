@@ -3,7 +3,7 @@
 git show scripts:scripts/update_image.rb > update_image.rb
 
 ruby update_image.rb . ./stash-repository
-ret=$1
+ret=$?
 
 # 1 exit code means versions have changed
 if [ "$ret" == "1" ]; then
@@ -30,7 +30,7 @@ if [ "$ret" == "1" ]; then
     # Push changes
     git push git@bitbucket.org:atlassian/docker-atlassian-stash.git HEAD:develop-test
 else
-    echo "No changes. Nothign to do"
+    echo "No changes. Nothing to do"
 fi
 
 

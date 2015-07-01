@@ -6,13 +6,13 @@ DOCKER_REPO=ARGV.shift
 STASH_REPO=ARGV.shift
 
 
-def with_repo(repo) 
+def with_repo(repo)
   FileUtils.cd(repo) do
     return yield
   end
 end
 
-class Docker 
+class Docker
 
   def initialize(repo); @repo = repo; end
 
@@ -41,7 +41,7 @@ class Docker
 
   def update_version_on_branch!(branch, version)
     raise "Version is empty" if version.nil? || version.strip.empty?
-    with_branch(branch) do 
+    with_branch(branch) do
       content = IO.readlines("Dockerfile")
       File.open("Dockerfile", "w") do |f|
         content.each do |line|
@@ -122,7 +122,12 @@ class Stash
   def resolve_stash_versions
     with_repo(@repo) do
       tags = `git tag`.split.select {|tag| tag =~ /stash-parent/}.collect{|tag| tag.gsub(/stash-parent-/,"")}.select{|version| version =~ /(\d+\.\d+(.\d+)?$)/}
-      tags.sort
+      tags.sort_by do |version|
+        if version =~ /^(\d+)\.(\d+)\.(\d+).*/
+          major, minor, patch = $1.dup.to_i, $2.dup.to_i, $3.dup.to_i
+          major * 10000 + minor * 100 + patch
+        end
+      end
     end
   end
 end
@@ -154,7 +159,7 @@ versions_to_update = determine_required_updates
 puts "Version update required: #{versions_to_update}" if $DEBUG
 
 if versions_to_update.empty?
-  puts "Nothing to do, all versions up to date" 
+  puts "Nothing to do, all versions up to date"
   exit 0
 else
   versions_to_update.each do |branch, version|

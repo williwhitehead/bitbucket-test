@@ -30,8 +30,9 @@ class Docker
 
 
   def ensure_version_branch_for_latest_exists!(version)
+    puts "Ensure version branch exists for #{version}"
     with_repo(@repo) do
-      if version =~ /(\d)+\.(\d)+.(\d)+/
+      if version =~ /(\d+)\.(\d+).(\d+)/
         major, minor = $1, $2
         branch = "release/#{major}.#{minor}"
         create_branch!(branch) unless branch_exists?(branch)

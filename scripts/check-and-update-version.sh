@@ -18,17 +18,17 @@ if [ "$ret" == "1" ]; then
     chmod u+x ./test-bitbucket-status.sh
 
     # Ensure permissions are correct
-    sudo docker run -u root -v /data/stash:/var/atlassian/application-data/bitbucket atlassian/bitbucket-test chown -R daemon  /var/atlassian/application-data/bitbucket
+    sudo docker run -u root -v /data/bitbucket-server:/var/atlassian/application-data/bitbucket atlassian/bitbucket-test chown -R daemon  /var/atlassian/application-data/bitbucket
 
-    # Start Stash
-    sudo docker run -v /data/stash:/var/atlassian/application-data/bitbucket --name="bitbucket" -d -p 7990:7990 -p 7999:7999 atlassian/bitbucket-test
+    # Start Bitbucket
+    sudo docker run -v /data/bitbucket-server:/var/atlassian/application-data/bitbucket --name="bitbucket-server" -d -p 7990:7990 -p 7999:7999 atlassian/bitbucket-test
 
 
     ./test-bitbucket-status.sh
     curl -v "http://localhost:7990/status"
 
     # Push changes
-    git push --all git@bitbucket.org:atlassian/docker-atlassian-stash.git
+    git push --all git@bitbucket.org:atlassian/docker-atlassian-bitbucket-server.git
 else
     echo "No changes. Nothing to do"
 fi

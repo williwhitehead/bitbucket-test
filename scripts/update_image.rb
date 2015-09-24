@@ -122,7 +122,7 @@ class Stash
 
   def resolve_stash_versions
     with_repo(@repo) do
-      tags = `git tag`.split.select {|tag| tag =~ /stash-parent/}.collect{|tag| tag.gsub(/stash-parent-/,"")}.select{|version| version =~ /(\d+\.\d+(.\d+)?$)/}
+      tags = `git tag`.split.select {|tag| tag =~ /bitbucket-parent/}.collect{|tag| tag.gsub(/bitbucket-parent-/,"")}.select{|version| version =~ /(\d+\.\d+(.\d+)?$)/}
       tags.sort_by do |version|
         if version =~ /^(\d+)\.(\d+)\.(\d+).*/
           major, minor, patch = $1.dup.to_i, $2.dup.to_i, $3.dup.to_i

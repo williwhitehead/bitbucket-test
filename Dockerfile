@@ -21,7 +21,7 @@ ENV BITBUCKET_HOME          /var/atlassian/application-data/bitbucket
 # Install Atlassian Bitbucket Server to the following location
 ENV BITBUCKET_INSTALL_DIR   /opt/atlassian/bitbucket
 
-ENV BITBUCKET_VERSION 4.9.0
+ENV BITBUCKET_VERSION   4.9.0
 ENV DOWNLOAD_URL        https://downloads.atlassian.com/software/stash/downloads/atlassian-bitbucket-${BITBUCKET_VERSION}.tar.gz
 
 RUN mkdir -p                             ${BITBUCKET_INSTALL_DIR} \
@@ -33,10 +33,6 @@ RUN mkdir -p                             ${BITBUCKET_INSTALL_DIR} \
     && chmod -R 700                      ${BITBUCKET_INSTALL_DIR}/work               \
     && chown -R ${RUN_USER}:${RUN_GROUP} ${BITBUCKET_INSTALL_DIR}/                   \
     && ln --symbolic                     "/usr/lib/x86_64-linux-gnu/libtcnative-1.so" "${BITBUCKET_INSTALL_DIR}/lib/native/libtcnative-1.so" 
-
-USER ${RUN_USER}:${RUN_GROUP}
-
-VOLUME ["${BITBUCKET_HOME}"]
 
 # HTTP + SSH Port
 EXPOSE 7990 7999

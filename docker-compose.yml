@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  load_balancer:
+    image: dockercloud/haproxy
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+    links:
+     - app
+    ports:
+     - "80:80"
+     - "7999:7999"
+  app:
+    image: atlassian/bitbucket-data-center
+    volumes:
+      - ./shared:/var/atlassian/application-data/bitbucket/shared
+    links:
+      - database
+    environment:
+      - EXCLUDE_PORTS=5701
+      - TCP_PORTS=7999
+      - HTTP_CHECK=GET /statusz
+    expose:
+      - "5701"
+  database:
+    image: postgres
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: docker

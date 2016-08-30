@@ -31,6 +31,16 @@ See [Supported Platforms](https://confluence.atlassian.com/display/BitbucketServ
 
 _* Note: If you are using `docker-machine` on Mac OS X, please use `open http://$(docker-machine ip default):7990` instead._
 
+# Data Center
+
+This image supports running as a Data Center instance.
+
+`docker-compose up -d` This will use the docker-compose.yml file to start a database, load balancer and app node in daemon mode.
+
+To add more app nodes to the cluster run `docker-compose scale app=N` where N is the number of app nodes you wish to run.
+
+The new nodes will automatically join the cluster and get added to the load balancer.
+
 # Upgrade
 
 To upgrade to a more recent version of Bitbucket Server you can simply stop the `bitbucket`

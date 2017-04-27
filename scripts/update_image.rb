@@ -97,9 +97,13 @@ class Docker
 
   def version_in_dockerfile(branch)
     content = `git show #{branch}:Dockerfile`
+    result=''
     if content =~ /ENV BITBUCKET_VERSION ([\d.]+)/
-      $1.dup.strip
+      result=$1.dup.strip
+    elsif content =~ /ARG BITBUCKET_VERSION=([\d.]+)/
+      result=$1.dup.strip
     end
+    result
   end
 end
 

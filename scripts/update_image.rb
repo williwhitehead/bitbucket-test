@@ -48,6 +48,8 @@ class Docker
         content.each do |line|
           if line =~ /^ENV BITBUCKET_VERSION/
             f << "ENV BITBUCKET_VERSION #{version}\n"
+          elsif line =~ /^ARG BITBUCKET_VERSION/
+            f << "ARG BITBUCKET_VERSION=#{version}\n"
           else
             f << line
           end

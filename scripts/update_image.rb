@@ -48,6 +48,8 @@ class Docker
         content.each do |line|
           if line =~ /^ENV BITBUCKET_VERSION/
             f << "ENV BITBUCKET_VERSION #{version}\n"
+          elsif line =~ /^ARG BITBUCKET_VERSION/
+            f << "ARG BITBUCKET_VERSION=#{version}\n"
           else
             f << line
           end
@@ -97,9 +99,13 @@ class Docker
 
   def version_in_dockerfile(branch)
     content = `git show #{branch}:Dockerfile`
+    result=''
     if content =~ /ENV BITBUCKET_VERSION ([\d.]+)/
-      $1.dup.strip
+      result=$1.dup.strip
+    elsif content =~ /ARG BITBUCKET_VERSION=([\d.]+)/
+      result=$1.dup.strip
     end
+    result
   end
 end
 

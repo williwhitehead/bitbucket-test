@@ -5,7 +5,14 @@ MAINTAINER Atlassian Bitbucket Server Team
 # Try to limit the number of RUN instructions to minimise the number of layers that will need to be created.
 # dumb-init is used to give proper signal handling to the app inside Docker
 RUN apt-get update -qq \
-    && apt-get install -y --no-install-recommends git libtcnative-1 ssh \
+    && apt-get install -y --no-install-recommends libtcnative-1 ssh \
+    && apt-get install -y --no-install-recommends build-essential libssl-dev libcurl4-gnutls-dev libexpat1-dev gettext perl \
+   && wget https://github.com/git/git/archive/v2.10.4.zip -O git.zip \ 
+    && unzip git.zip \
+    && cd git-* \
+    && make prefix=/usr/local all \
+    && make prefix=/usr/local install \
+    && rm -rf git-* \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/ \
